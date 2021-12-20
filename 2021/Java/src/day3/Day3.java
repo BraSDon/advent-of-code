@@ -9,26 +9,28 @@ import java.util.stream.Collectors;
 
 public class Day3 {
 
-    private static final String FILENAME = "src/day3/input.txt";
+    private static final String FILENAME = "2021\\Java\\src\\day3\\input.txt";
 
     public static void main(String[] args) {
-        List<char[]> input = getInput();
-        int generatorRating = convertCharArrayToInt(filterInput(input, false).get(0));
-        int scrubberRating = convertCharArrayToInt(filterInput(input, true).get(0));
-        System.out.println(generatorRating * scrubberRating);
+        List<char[]> input;
+        try {
+            input = getInput();
+            int generatorRating = convertCharArrayToInt(filterInput(input, false).get(0));
+            int scrubberRating = convertCharArrayToInt(filterInput(input, true).get(0));
+            System.out.println(generatorRating * scrubberRating);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static List<char[]> getInput() {
+    public static List<char[]> getInput() throws FileNotFoundException {
         List<char[]> input = new ArrayList<>();
-        try {
-            File file = new File(FILENAME);
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()) {
-                input.add(sc.nextLine().toCharArray());
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Error occured reading file");
+        File file = new File(FILENAME);
+        Scanner sc = new Scanner(file);
+        while (sc.hasNextLine()) {
+            input.add(sc.nextLine().toCharArray());
         }
+        sc.close();
         return input;
     }
 

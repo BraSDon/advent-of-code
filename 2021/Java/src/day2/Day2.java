@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Day2 {
 
-    private static final String FILENAME = "src/day2/input.txt";
+    private static final String FILENAME = "2021\\Java\\src\\day2\\input.txt";
 
     public static void main(String[] args) {
         System.out.println(calculateTask1(getCommandsFromInput(getInput())));
