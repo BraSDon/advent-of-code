@@ -57,6 +57,7 @@ public class Day2 {
             while (sc.hasNextLine()) {
                 input.add(sc.nextLine());
             }
+            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error occured reading file");
         }
