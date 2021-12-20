@@ -5,7 +5,7 @@ sumElements (x:xs) = foldr (+) 0 (x:xs)
   
 convertList [x] = [] 
 convertList (x:(y:ys)) = increased [x,y] : convertList (y:ys)
-convertList (x:[y]) = [increased [x,y]]
+-- convertList (x:[y]) = [increased [x,y]]
 
 increased (x:[y]) = if x < y then 1 else 0
 
