@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Aoc.Y2021.Day01
       Lib
   other-modules:
       Paths_Haskell
