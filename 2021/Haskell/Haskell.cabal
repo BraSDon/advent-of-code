@@ -25,7 +25,6 @@ source-repository head
 
 library
   exposed-modules:
-      Aoc.Parsing
       Aoc.Y2021.Day01
       Aoc.Y2021.Day06
       Lib
