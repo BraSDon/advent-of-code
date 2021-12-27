@@ -27,6 +27,7 @@ library
   exposed-modules:
       Aoc.Y2021.Day01
       Aoc.Y2021.Day06
+      Aoc.Y2021.Day07
       Lib
   other-modules:
       Paths_Haskell
