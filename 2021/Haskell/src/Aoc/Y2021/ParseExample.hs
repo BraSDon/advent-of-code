@@ -108,11 +108,12 @@ roundP = do
   y <- closing
   return (Round x y)
 
-nextToP :: Parser Bracket
-nextToP = do
-  x <- recEncP 
+encP :: Parser Bracket
+encP = do
+  x <- opening
   y <- recEncP
-  return (NextTo x y)
+  z <- closing
+  return (Enclosing (Round x z) y)
 
 recEncP :: Parser Bracket
 recEncP = do
@@ -120,12 +121,11 @@ recEncP = do
   -- therefore we need "try" for backtracking.
   try roundP <|> encP
 
-encP :: Parser Bracket
-encP = do
-  x <- opening
-  y <- recEncP
-  z <- closing
-  return (Enclosing (Round x z) y)
+bracketP :: Parser Bracket
+bracketP = do
+  x <- recEncP 
+  y <- try bracketP <|> recEncP
+  return (NextTo x y)
 
 main :: IO ()
 main = do
@@ -144,8 +144,6 @@ main = do
     print $ parse recEncP "" (pack "()")
     print $ parse recEncP "" (pack "(())")
     print $ parse recEncP "" (pack "((()))")
-    -- This might work instead
-    print $ parse nextToP "" (pack "()()")
-    print $ parse nextToP "" (pack "(())()")
-    -- This does not quite work yet
-    print $ parse nextToP "" (pack "(())()()")
+    print $ parse bracketP "" (pack "()()")
+    print $ parse bracketP "" (pack "(())()")
+    print $ parse bracketP "" (pack "(())()()")
