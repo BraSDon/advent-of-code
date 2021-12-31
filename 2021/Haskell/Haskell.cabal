@@ -29,6 +29,7 @@ library
       Aoc.Y2021.Day06
       Aoc.Y2021.Day07
       Aoc.Y2021.Day10
+      Aoc.Y2021.Day12
       Aoc.Y2021.ParseBrackets
       Aoc.Y2021.ParseExample
       Lib
