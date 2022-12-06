@@ -1,3 +1,6 @@
+import copy
+
+
 def split_stack_from_rest(lines):
     for i, line in enumerate(lines):
         if line != "\n": continue
@@ -19,10 +22,15 @@ def get_stacks(stack_part):
     return stacks
 
 
-def move(stacks, movement_triple):
+def move(stacks, movement_triple, move_multiple=False):
     count, from_, to = movement_triple
+    to_add = list()
     for i in range(count):
-        stacks[to - 1].append(stacks[from_ - 1].pop())
+        to_add.append(stacks[from_ - 1].pop())
+    if move_multiple:
+        to_add.reverse()
+    stacks[to - 1] += to_add
+    return stacks
 
 
 def get_movement_triples(rest):
@@ -34,10 +42,15 @@ with open("inputs/day05.txt") as f:
     lines = f.readlines()
     stack_part, rest = split_stack_from_rest(lines)
 
-stacks = get_stacks(stack_part)
+stacks, stacks_copy = get_stacks(stack_part), get_stacks(stack_part)
 movement_triples = get_movement_triples(rest)
 for triple in movement_triples:
     move(stacks, triple)
 
 # Task 1
-print("Task 1: " + "".join([stack.pop() for stack in stacks]))
+print("Task 1: " + "".join([stack[-1] for stack in stacks]))
+
+for triple in movement_triples:
+    move(stacks_copy, triple, move_multiple=True)
+
+print("Task 2: " + "".join([stack[-1] for stack in stacks_copy]))
