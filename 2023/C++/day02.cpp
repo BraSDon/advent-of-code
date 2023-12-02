@@ -45,11 +45,25 @@ bool isGamePossible(const std::vector<RGB>& sets) {
     return true;
 }
 
+int getPowerOfGame(const std::vector<RGB>& sets) {
+    int max_red, max_green, max_blue;
+    max_red = max_green = max_blue = 0;
+    for (const auto& set : sets) {
+        int red, green, blue;
+        std::tie(red, green, blue) = set;
+        max_red = std::max(max_red, red);
+        max_green = std::max(max_green, green);
+        max_blue = std::max(max_blue, blue);
+    }
+    return max_red * max_green * max_blue;
+}
+
 int main () {
     std::ifstream myfile ("../inputs/day02.txt");
 
     std::string line;
     int sum_of_possible_ids = 0;
+    int sum_of_powers = 0;
     int i = 0;
     while (std::getline(myfile, line)) {
         std::regex gamex("Game ([0-9]+)");
@@ -72,7 +86,9 @@ int main () {
         if (isGamePossible(sets)) {
             sum_of_possible_ids += game;
         }
+        sum_of_powers += getPowerOfGame(sets);
     }
 
     std::cout << "Sum of possible game IDs: " << sum_of_possible_ids << std::endl;
+    std::cout << "Sum of powers: " << sum_of_powers << std::endl;
 }
