@@ -26,7 +26,7 @@ def convert_two_digit(num: str) -> int:
     # convert n-digit number to two digit number
     return int(num[0] + num[-1])
 
-with open("./inputs/day01.txt", "r") as f:
+with open("../inputs/day01.txt", "r") as f:
     lines = f.readlines()
 
 
