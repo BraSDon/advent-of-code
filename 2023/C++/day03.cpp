@@ -29,11 +29,6 @@ class Number {
         Number(int value, vector<point> positions) {
             this->value = value;
             this->positions = positions;
-            // print value and positions
-            cout << "Value: " << value << endl;
-            for (auto position : positions) {
-                cout << "(" << position.x << ", " << position.y << ")" << endl;
-            }
         }
 
         bool isAdjacentTo(point symbol_position) {
@@ -93,7 +88,7 @@ int main () {
         rowIndex++;
     }
 
-    // for each number, check if it has an adjacent symbol. If yes, add its value to the sum.
+    // puzzle 1
     for (auto number : numbers) {
         for (auto symbol_pos : symbol_positions) {
             if (number.isAdjacentTo(symbol_pos)) {
@@ -101,6 +96,21 @@ int main () {
             }
         }
     }
+
+    // puzzle 2
+    int sum_gear_ratio = 0;
+    for (auto symbol_pos : symbol_positions) {
+        vector<Number> adjacent_numbers;
+        for (auto number : numbers) {
+            if (number.isAdjacentTo(symbol_pos)) {
+                adjacent_numbers.push_back(number);
+            }
+        }
+        if (adjacent_numbers.size() == 2) {
+            sum_gear_ratio += adjacent_numbers[0].value * adjacent_numbers[1].value;
+        }
+    }
     
     cout << "Total sum: " << sum;
+    cout << "Total sum of gear ratios: " << sum_gear_ratio;
 }
