@@ -7,110 +7,106 @@
 
 using namespace std;
 
-struct point {
+class Coordinate {
+public:
     int x;
     int y;
 
-    point(int x, int y) {
-        this->x = x;
-        this->y = y;
-    }
+    Coordinate(int x, int y) : x(x), y(y) {}
 
-    // adjacent to another coordinate (including diagonals)
-    bool isAdjacentTo(point other) {
+    bool isAdjacentTo(const Coordinate& other) const {
         return abs(x - other.x) <= 1 && abs(y - other.y) <= 1;
     }
 };
 
-class Number {
-    public:
-        int value;
-        vector<point> positions;
-        Number(int value, vector<point> positions) {
-            this->value = value;
-            this->positions = positions;
-        }
+class DigitGroup {
+public:
+    int value;
+    vector<Coordinate> positions;
 
-        bool isAdjacentTo(point symbol_position) {
-            for (auto position : positions) {
-                if (position.isAdjacentTo(symbol_position)) {
-                    return true;
-                }
+    DigitGroup(int value, vector<Coordinate> positions) : value(value), positions(positions) {}
+    
+    bool isAdjacentTo(const Coordinate& symbolPosition) const {
+        for (const auto& position : positions) {
+            if (position.isAdjacentTo(symbolPosition)) {
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 };
 
-vector<point> getPositions(int start, int length, int rowIndex) {
-    vector<point> positions;
+vector<Coordinate> getCoordinates(int start, int length, int rowIndex) {
+    vector<Coordinate> coordinates;
     for (int i = start; i < start + length; i++) {
-        positions.push_back(point(rowIndex, i));
+        coordinates.emplace_back(rowIndex, i);
     }
-    return positions;
+    return coordinates;
 }
 
-int main () {
-    vector<vector<char>> matrix;
-    vector<Number> numbers;
-    vector<point> symbol_positions;
+int main() {
+    vector<DigitGroup> digitGroups;
+    vector<Coordinate> symbolPositions;
     int sum = 0;
 
-    ifstream myfile ("../inputs/day03.txt");
+    ifstream myfile("../inputs/day03.txt");
     string line;
     int rowIndex = 0;
 
     while (getline(myfile, line)) {
 
-        regex numbers_rgx("\\d+");
-        regex symbol_rgx("[^\\d.]");
+        regex numbersRegex("\\d+");
+        regex symbolRegex("[^\\d.]");
         smatch match;
 
-        // find all numbers
-        sregex_iterator nb_iter(line.begin(), line.end(), numbers_rgx);
-        sregex_iterator nb_end;
+        // find all digit groups
+        sregex_iterator digitGroupIter(line.begin(), line.end(), numbersRegex);
+        sregex_iterator digitGroupEnd;
 
-        while (nb_iter != nb_end) {
-            string matched = nb_iter->str();
-            int position = nb_iter->position();
-            Number number(stoi(matched), getPositions(position, matched.length(), rowIndex));
-            numbers.push_back(number);
-            nb_iter++;
+        while (digitGroupIter != digitGroupEnd) {
+            string matched = digitGroupIter->str();
+            int position = digitGroupIter->position();
+            DigitGroup digitGroup(stoi(matched), getCoordinates(position, matched.length(), rowIndex));
+            digitGroups.push_back(digitGroup);
+            digitGroupIter++;
         }
 
         // find all symbols
-        sregex_iterator symbol_iter(line.begin(), line.end(), symbol_rgx);
-        sregex_iterator symbol_end;
+        sregex_iterator symbolIter(line.begin(), line.end(), symbolRegex);
+        sregex_iterator symbolEnd;
 
-        while (symbol_iter != symbol_end) {
-            symbol_positions.push_back(point(rowIndex, symbol_iter->position()));
-            symbol_iter++;
+        while (symbolIter != symbolEnd) {
+            symbolPositions.emplace_back(rowIndex, symbolIter->position());
+            symbolIter++;
         }
         rowIndex++;
     }
 
     // puzzle 1
-    for (auto number : numbers) {
-        for (auto symbol_pos : symbol_positions) {
-            if (number.isAdjacentTo(symbol_pos)) {
-                sum += number.value;
+    for (const auto& digitGroup : digitGroups) {
+        for (const auto& symbolPos : symbolPositions) {
+            if (digitGroup.isAdjacentTo(symbolPos)) {
+                sum += digitGroup.value;
             }
         }
     }
 
     // puzzle 2
-    int sum_gear_ratio = 0;
-    for (auto symbol_pos : symbol_positions) {
-        vector<Number> adjacent_numbers;
-        for (auto number : numbers) {
-            if (number.isAdjacentTo(symbol_pos)) {
-                adjacent_numbers.push_back(number);
+    int sumGearRatio = 0;
+    for (const auto& symbolPos : symbolPositions) {
+        vector<DigitGroup> adjacentDigitGroups;
+        for (const auto& digitGroup : digitGroups) {
+            if (digitGroup.isAdjacentTo(symbolPos)) {
+                adjacentDigitGroups.push_back(digitGroup);
             }
         }
-        if (adjacent_numbers.size() == 2) {
-            sum_gear_ratio += adjacent_numbers[0].value * adjacent_numbers[1].value;
+        if (adjacentDigitGroups.size() == 2) {
+            sumGearRatio += adjacentDigitGroups[0].value * adjacentDigitGroups[1].value;
         }
     }
-    
-    cout << "Total sum: " << sum;
-    cout << "Total sum of gear ratios: " << sum_gear_ratio;
+
+    cout << "Total sum: " << sum << endl;
+    cout << "Total sum of gear ratios: " << sumGearRatio << endl;
+
+    return 0;
 }
